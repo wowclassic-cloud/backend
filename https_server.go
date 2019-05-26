@@ -25,6 +25,7 @@ func main() {
 		log.Fatalf("-hostname must be provided and not empty/invalid.")
 	}
 	log.Infof("Using hostname = %s", hostname)
+	fhttp.RedirectToHTTPS(":80")
 	hostPolicy := func(ctx context.Context, host string) error {
 		log.LogVf("Calling host policy cb for %s - ctx %v", host, ctx)
 		if host == hostname {
