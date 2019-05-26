@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"flag"
 	"fmt"
 	"net/http"
@@ -18,7 +17,7 @@ var (
 )
 
 func main() {
-	log.SetLogLevel(log.Debug)
+	flag.Parse()
 	hostname := *hostnameFlag
 	if len(hostname) == 0 || strings.IndexRune(hostname, '.') < 0 {
 		log.Fatalf("-hostname must be provided and not empty/invalid.")
@@ -35,20 +34,22 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, TLS user! Your config: %+v", r.TLS)
 	})
-	httpsSrv := http.Server{Handler: mux}
+
 	m := &autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
 		HostPolicy: hostPolicy,
 		Cache:      autocert.DirCache(*certDirFlag),
 	}
-	httpsSrv.Addr = ":443"
-	httpsSrv.TLSConfig = &tls.Config{GetCertificate: m.GetCertificate}
 
-	go func() {
-		err := httpsSrv.ListenAndServeTLS("", "")
-		if err != nil {
-			log.Fatalf("httpsSrv.ListendAndServeTLS() failed with %s", err)
-		}
-	}()
+	s := &http.Server{
+		Addr:      ":https",
+		TLSConfig: m.TLSConfig(),
+		Handler:   mux,
+	}
+	err := s.ListenAndServeTLS("", "")
+
+	if err != nil {
+		log.Fatalf("ListenAndServeTLS() failed with %v", err)
+	}
 
 }
