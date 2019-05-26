@@ -9,7 +9,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func main() {
+func login() {
 	log.SetLogLevel(log.Debug)
 	cid := os.Getenv("OAUTH_CID")
 	if len(cid) == 0 {
