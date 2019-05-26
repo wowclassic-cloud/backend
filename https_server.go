@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strings"
 
+	"fortio.org/fortio/fhttp"
+
 	"fortio.org/fortio/log"
 	"golang.org/x/crypto/acme/autocert"
 )
@@ -31,9 +33,9 @@ func main() {
 		return fmt.Errorf("acme/autocert: only %s host is allowed", hostname)
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", fhttp.LogAndCall("https_debug", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, TLS user! Your config: %+v", r.TLS)
-	})
+	}))
 
 	m := &autocert.Manager{
 		Prompt:     autocert.AcceptTOS,

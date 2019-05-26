@@ -29,7 +29,7 @@ func login() {
 			AuthURL:  "https://us.battle.net/oauth/authorize",
 			TokenURL: "https://us.battle.net/oauth/token",
 		},
-		RedirectURL: "https://localhost:8008/oauthc/",
+		RedirectURL: "https://app.classicwow.cloud/oauthc/",
 	}
 
 	// Redirect user to consent page to ask for permission
