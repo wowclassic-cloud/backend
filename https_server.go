@@ -1,3 +1,17 @@
+// Copyright 2019 ClassicWow.Cloud Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
@@ -34,7 +48,7 @@ func main() {
 		return fmt.Errorf("acme/autocert: only %s host is allowed", hostname)
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", fhttp.DebugHandler)
+	mux.HandleFunc("/debug", fhttp.DebugHandler)
 	mux.HandleFunc("/tls", fhttp.LogAndCall("tls_info", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, TLS user! Your config: %+v", r.TLS)
 	}))
